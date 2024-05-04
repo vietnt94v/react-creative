@@ -1,22 +1,21 @@
 'use client'
-import { useDispatch, useSelector } from 'react-redux'
-import { increment, decrement } from '../../redux/counter/counterSlice'
-import { RootState } from '../../redux/store'
-import { useEffect } from 'react'
+import { useState } from 'react'
+import Popup from '@/components/Popup'
 
 const Home = () => {
-  const dispatch = useDispatch()
-  const counter = useSelector((state: RootState) => state.counter)
-
-  useEffect(() => {
-    dispatch(increment())
-  },[])
+  const [isShowPopup, setIsShowPopup] = useState<boolean>(false)
 
   return (
-    <div>
-      <h1>Counter: {counter.count}</h1>
-      <button onClick={() => dispatch(increment())}>Increment</button>
-      <button onClick={() => dispatch(decrement())}>Decrement</button>
+    <div className='home-page'>
+      <button onClick={() => setIsShowPopup(true)}>Open Popup</button>
+      {isShowPopup && (
+        <Popup
+          title='Confirm Submit'
+          message='Do you want to delete this record?'
+          onSubmit={() => setIsShowPopup(false)}
+          onCancel={() => setIsShowPopup(false)}
+        />
+      )}
     </div>
   )
 }
