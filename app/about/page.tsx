@@ -9,7 +9,7 @@ const About = () => {
   return (
     <>
       <div>About me: Creative</div>
-      <h1>Counter: {counter}</h1>
+      <h1>Counter: {counter.count}</h1>
     </>
   )
 }

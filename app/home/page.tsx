@@ -14,7 +14,9 @@ const Home = () => {
           message='Do you want to delete this record?'
           onSubmit={() => setIsShowPopup(false)}
           onCancel={() => setIsShowPopup(false)}
-        />
+        >
+          <p className='text-red-500'>Do you want to delete this record?</p>
+        </Popup>
       )}
     </div>
   )
