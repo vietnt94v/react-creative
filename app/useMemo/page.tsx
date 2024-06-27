@@ -3,7 +3,7 @@ import React, { useMemo, useState } from 'react'
 
 const RenderA = ({ count }: { count: number }) => {
   const handleExpensiveValue = (num: number) => {
-    console.log('RenderA... ', num)
+    console.log('One match need expensive value... ', num)
     return num
   }
 
@@ -12,7 +12,7 @@ const RenderA = ({ count }: { count: number }) => {
 
   return (
     <>
-      <div>Count: {expensiveValue}</div>
+      <div>Render A | Count: {expensiveValue}</div>
     </>
   )
 }
@@ -24,16 +24,18 @@ const UseMemo = () => {
 
   return (
     <>
-      <button onClick={() => setCount(count + 1)}>Increment Count</button>
-      <button onClick={() => setCount2(count2 + 2)}>Increment Count 2</button>
-      <input
-        type='text'
-        value={text}
-        onChange={e => setText(e.target.value)}
-        className='block text-black'
-      />
-      <RenderA count={count} />
-      {count2}
+      <div className='flex flex-col items-baseline space-y-2'>
+        <button onClick={() => setCount(count + 1)}>Increment Count</button>
+        <button onClick={() => setCount2(count2 + 2)}>Increment Count 2</button>
+        <input
+          type='text'
+          value={text}
+          onChange={e => setText(e.target.value)}
+          className='block text-black'
+        />
+        <RenderA count={count} />
+        {count2}
+      </div>
     </>
   )
 }
