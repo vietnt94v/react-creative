@@ -1,8 +1,9 @@
 'use client'
 import React, { ChangeEvent, FormEvent, useState } from 'react'
-import Const from '../const'
+import { useRouter } from 'next/navigation'
 import axios from 'axios'
-import CryptoJS, { enc } from 'crypto-js'
+import Const from '../const'
+import CryptoJS from 'crypto-js'
 
 interface LoginData {
   username: string
@@ -12,6 +13,7 @@ interface LoginData {
 const secretKeyToken = Const.crypto_key || ''
 
 const Login = () => {
+  const router = useRouter()
   const [loginData, setLoginData] = useState<LoginData>({
     username: 'emilys',
     password: 'emilyspass',
@@ -37,14 +39,9 @@ const Login = () => {
       ).toString()
       localStorage.setItem('token', encyptedToken)
 
-      const encryptedTokenFromStorage = localStorage.getItem('token')
-      const decryptedToken = encryptedTokenFromStorage
-        ? CryptoJS.AES.decrypt(
-            encryptedTokenFromStorage,
-            secretKeyToken,
-          ).toString(CryptoJS.enc.Utf8)
-        : ''
-      console.log('decryptedToken: ', decryptedToken)
+      if (encyptedToken) {
+        router.push('/')
+      }
     } catch (error) {
       console.error('error: ', error)
     }
@@ -53,8 +50,8 @@ const Login = () => {
   return (
     <>
       <form className='p-5 space-y-2'>
-        <div className='space-x-2'>
-          <label htmlFor=''>user name</label>
+        <div className='flex align-baseline space-x-2'>
+          <label>user name</label>
           <input
             type='text'
             name='username'
@@ -62,8 +59,8 @@ const Login = () => {
             onChange={handleChangeInput}
           />
         </div>
-        <div className='space-x-2'>
-          <label htmlFor=''>password</label>
+        <div className='flex space-x-2'>
+          <label>password</label>
           <input
             type='password'
             name='password'
