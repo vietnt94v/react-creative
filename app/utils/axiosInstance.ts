@@ -13,23 +13,44 @@ const axiosInstance = axios.create({
 })
 
 axiosInstance.interceptors.request.use(config => {
-  const token = localStorage.getItem('token')
-  if (token) {
+  const encryptedToken = localStorage.getItem('token')
+  if (encryptedToken) {
+    const token = CryptoJS.AES.decrypt(encryptedToken, secretKeyToken).toString(
+      CryptoJS.enc.Utf8,
+    )
     config.headers.Authorization = `Bearer ${token}`
   }
-
   return config
 })
 
-const refreshAccessToken = async () => {
+const refreshToken = async () => {
+  const encryptedRefreshToken = localStorage.getItem('refreshToken')
+  if (!encryptedRefreshToken) throw new Error('No refresh token found')
+
+  const refreshToken = CryptoJS.AES.decrypt(
+    encryptedRefreshToken,
+    secretKeyToken,
+  ).toString(CryptoJS.enc.Utf8)
+
   try {
-    const res = await axios.post(`${Const.api_endpoint}/auth/refresh-token`)
-    const token = res.data.token
-    const encyptedToken = CryptoJS.AES.encrypt(token, secretKeyToken).toString()
-    localStorage.setItem('token', encyptedToken)
+    const { data } = await axiosInstance.post('/auth/refresh', { refreshToken })
+    const { token, refreshToken: newRefreshToken } = data
+
+    const encryptedToken = CryptoJS.AES.encrypt(
+      token,
+      secretKeyToken,
+    ).toString()
+    const encryptedRefreshToken = CryptoJS.AES.encrypt(
+      newRefreshToken,
+      secretKeyToken,
+    ).toString()
+
+    localStorage.setItem('token', encryptedToken)
+    localStorage.setItem('refreshToken', encryptedRefreshToken)
+
     return token
   } catch (error) {
-    console.error('Error: ', error)
+    console.error('Error refreshing token:', error)
     throw error
   }
 }
@@ -37,7 +58,16 @@ const refreshAccessToken = async () => {
 axiosInstance.interceptors.response.use(
   response => response,
   async error => {
-    if (error.response.status === 401) {
+    const { response, config } = error
+    if (response?.status === 401) {
+      try {
+        const newAccessToken = await refreshToken()
+        config.headers.Authorization = `Bearer ${newAccessToken}`
+        return axiosInstance(config) // retry the original request
+      } catch (error) {
+        console.error('Failed to refresh token', error)
+        throw error
+      }
     }
 
     return Promise.reject(error)

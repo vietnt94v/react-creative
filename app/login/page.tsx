@@ -1,9 +1,9 @@
 'use client'
 import React, { ChangeEvent, FormEvent, useState } from 'react'
 import { useRouter } from 'next/navigation'
-import axios from 'axios'
-import Const from '../const'
+import axiosInstance from '../utils/axiosInstance'
 import CryptoJS from 'crypto-js'
+import Const from '../const'
 
 interface LoginData {
   username: string
@@ -20,7 +20,6 @@ const Login = () => {
   })
 
   const handleChangeInput = (event: ChangeEvent<HTMLInputElement>) => {
-    console.log('event.target: ', event)
     const { name, value } = event.target
     setLoginData(prev => ({ ...prev, [name]: value }))
   }
@@ -28,51 +27,66 @@ const Login = () => {
   const handleLogin = async (event: FormEvent) => {
     event.preventDefault()
     try {
-      const res = await axios.post(
-        `${Const.api_endpoint}/auth/login`,
-        loginData,
-      )
-      const token = res.data.token
-      const encyptedToken = CryptoJS.AES.encrypt(
+      const { data } = await axiosInstance.post('/auth/login', loginData)
+      const { token, refreshToken } = data
+
+      const encryptedToken = CryptoJS.AES.encrypt(
         token,
         secretKeyToken,
       ).toString()
-      localStorage.setItem('token', encyptedToken)
+      const encryptedRefreshToken = CryptoJS.AES.encrypt(
+        refreshToken,
+        secretKeyToken,
+      ).toString()
 
-      if (encyptedToken) {
+      localStorage.setItem('token', encryptedToken)
+      localStorage.setItem('refreshToken', encryptedRefreshToken)
+
+      if (token) {
         router.push('/')
       }
     } catch (error) {
-      console.error('error: ', error)
+      console.error('Login failed:', error)
     }
   }
 
   return (
-    <>
-      <form className='p-5 space-y-2'>
-        <div className='flex align-baseline space-x-2'>
-          <label>user name</label>
+    <div className='h-screen flex justify-center items-baseline pt-64'>
+      <form
+        className='border p-5 space-y-5 rounded shadow-lg'
+        onSubmit={handleLogin}
+      >
+        <div className='grid grid-cols-12'>
+          <label htmlFor='username' className='col-span-4'>
+            User Name
+          </label>
           <input
+            id='username'
+            className='col-span-8'
             type='text'
             name='username'
             value={loginData.username}
             onChange={handleChangeInput}
           />
         </div>
-        <div className='flex space-x-2'>
-          <label>password</label>
+        <div className='grid grid-cols-12'>
+          <label htmlFor='password' className='col-span-4'>
+            Password
+          </label>
           <input
+            id='password'
+            className='col-span-8'
             type='password'
             name='password'
             value={loginData.password}
             onChange={handleChangeInput}
           />
         </div>
-        <div className='block'>
-          <button onClick={handleLogin}>Login</button>
+        <div className='text-center'>
+          <button type='submit'>Login</button>
         </div>
       </form>
-    </>
+    </div>
   )
 }
 

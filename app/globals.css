@@ -3,9 +3,9 @@
 @tailwind utilities;
 
 input {
-  @apply border border-gray-300 rounded px-2 py-1;
+  @apply border border-gray-300 rounded px-4 py-2;
 }
 
 button {
-  @apply bg-blue-500 text-white rounded px-2 py-1;
+  @apply bg-blue-500 text-white rounded px-4 py-2;
 }
