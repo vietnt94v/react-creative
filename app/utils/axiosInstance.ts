@@ -2,7 +2,7 @@ import axios from 'axios'
 import Const from '../const'
 import CryptoJS from 'crypto-js'
 
-const secretKeyToken = Const.crypto_key || ''
+const secretKeyToken = Const.crypto_secret_key || ''
 
 const axiosInstance = axios.create({
   baseURL: Const.api_endpoint,

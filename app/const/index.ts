@@ -1,6 +1,6 @@
 const Const = {
-  api_endpoint: process.env.REACT_APP_API_END_POINT,
-  crypto_key: process.env.REACT_APP_CRYPTO_KEY,
+  api_endpoint: process.env.NEXT_PUBLIC_API_ENDPOINT,
+  crypto_secret_key: process.env.NEXT_PUBLIC_CRYPTO_SECRET_KEY,
 }
 
 export default Const
