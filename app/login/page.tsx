@@ -65,7 +65,7 @@ const Login = () => {
       {loading && <Backdrop />}
       <div className='h-screen flex justify-center items-baseline pt-64'>
         <form
-          className='border p-5 space-y-5 rounded shadow-lg'
+          className='border p-5 space-y-5 rounded shadow-lg bg-slate-100'
           onSubmit={handleLogin}
         >
           <div className='grid grid-cols-12'>
