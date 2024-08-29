@@ -4,7 +4,7 @@ import IUser from '../models/User'
 
 interface IUserContext {
   user: IUser | null
-  setUser: React.Dispatch<React.SetStateAction<IUser | null>>
+  setUser: (user: IUser | null) => void
 }
 
 const UserContext = createContext<IUserContext | null>(null)
@@ -19,4 +19,12 @@ export const UserProvider = ({ children }: { children: ReactNode }) => {
       </UserContext.Provider>
     </>
   )
+}
+
+export const useUser = () => {
+  const context = useContext(UserContext)
+  if (!context) {
+    throw new Error('useUser must be used within a UserProvider')
+  }
+  return context
 }

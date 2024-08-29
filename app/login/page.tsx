@@ -1,10 +1,12 @@
 'use client'
-import React, { ChangeEvent, FormEvent, useState } from 'react'
+import React, { ChangeEvent, FormEvent, use, useContext, useState } from 'react'
 import { useRouter } from 'next/navigation'
 import axios from 'axios'
 import CryptoJS from 'crypto-js'
 import Const from '../const'
 import Backdrop from '../components/backdrop'
+import IUser from '../models/User'
+import { useUser } from '../contexts/UserContext'
 
 interface LoginData {
   username: string
@@ -15,6 +17,7 @@ const secretKeyToken = Const.crypto_secret_key || ''
 
 const Login = () => {
   const router = useRouter()
+  const userContext = useUser()
   const [disabledSubmit, setDisabledSubmit] = useState(false)
   const [loading, setLoading] = useState(false)
   const [loginData, setLoginData] = useState<LoginData>({
@@ -36,7 +39,17 @@ const Login = () => {
         `${Const.api_endpoint}/auth/login`,
         loginData,
       )
-      const { token, refreshToken } = data
+      const {
+        token,
+        refreshToken,
+        id,
+        username,
+        email,
+        firstName,
+        lastName,
+        gender,
+        image,
+      } = data
       const encryptedToken = CryptoJS.AES.encrypt(
         token,
         secretKeyToken,
@@ -48,6 +61,19 @@ const Login = () => {
 
       localStorage.setItem('token', encryptedToken)
       localStorage.setItem('refreshToken', encryptedRefreshToken)
+
+      if (userContext && userContext.setUser) {
+        const userData: IUser = {
+          id: id,
+          username: username,
+          email: email,
+          firstName: firstName,
+          lastName: lastName,
+          gender: gender,
+          image: image,
+        }
+        userContext.setUser(userData)
+      }
 
       if (token) {
         router.push('/')

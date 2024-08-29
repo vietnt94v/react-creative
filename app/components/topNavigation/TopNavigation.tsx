@@ -1,21 +1,37 @@
-import React from 'react'
-
+'use client'
+import Link from 'next/link'
+import { useUser } from '../../contexts/UserContext'
 
 const TopNavigation = () => {
+  const userContext = useUser()
+
+  if (!userContext) {
+    return null
+  }
+
+  const { user } = userContext
+
   return (
     <>
-      <div className='bg-blue-dark-500'>
+      <nav className='bg-blue-dark-500 py-2 text-white'>
         <div className='container'>
-          <div className='flex py-2'>
+          <div className='flex'>
             <div className='flex-1'>
-              <h1 className='text-2xl font-bold text-white'>App</h1>
+              <div className=''>App</div>
             </div>
-            <div className='flex-1 text-right'>
-
+            <div className='flex-1 flex justify-end'>
+              {user ? (
+                <span>
+                  Welcome{' '}
+                  <span className='text-orange-500'>{user.username}</span>
+                </span>
+              ) : (
+                <Link href='/login'>Login</Link>
+              )}
             </div>
           </div>
         </div>
-      </div>
+      </nav>
     </>
   )
 }
