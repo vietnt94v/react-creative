@@ -75,7 +75,7 @@ const Login = () => {
         userContext.setUser(userData)
       }
 
-      if (token) {
+      if (encryptedToken) {
         router.push('/')
       }
     } catch (error) {
