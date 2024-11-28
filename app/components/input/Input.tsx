@@ -1,7 +1,9 @@
-import React from 'react';
-import IInput from '../../models/Input';
+import React from 'react'
+import IInput from '../../models/Input'
 
 const Input = ({
+  className,
+  id,
   value = '',
   placeholder = '',
   onChange,
@@ -11,11 +13,13 @@ const Input = ({
 }: IInput) => {
   const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
     if (e.key === 'Enter' && onEnter) {
-      onEnter();
+      onEnter()
     }
-  };
+  }
   return (
     <input
+      className={`border border-gray-300 rounded px-4 py-2 ${className ?? ''}`}
+      id={id}
       type='text'
       value={value}
       placeholder={placeholder}
@@ -24,7 +28,7 @@ const Input = ({
       onFocus={onFocus}
       onBlur={onBlur}
     />
-  );
-};
+  )
+}
 
-export default Input;
+export default Input
