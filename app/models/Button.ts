@@ -16,7 +16,6 @@ interface IButton {
     | 'cyan'
     | 'purple'
     | 'pink'
-    | 'accent'
   size?: 'small' | 'medium' | 'large'
 
   // Behavior

@@ -22,17 +22,17 @@ const Home = () => {
   return (
     <>
       <div className='container pt-3'>
-        <div className='flex flex-col space-y-3'>
-          <Input
-            value={inputValue}
-            onChange={handleChange}
-            onEnter={handleEnter}
-          />
-          <Button variant='outline' color='orange'>
-            Submit
-          </Button>
-          <Button color='orange'>Submit</Button>
-        </div>
+        <Input
+          value={inputValue}
+          onChange={handleChange}
+          onEnter={handleEnter}
+        />
+        <Button color='orange' isLoading={isLoadingSubmit}>
+          Button
+        </Button>
+        <Button color='orange' variant='outline' isLoading={isLoadingSubmit}>
+          Button
+        </Button>
       </div>
     </>
   )
