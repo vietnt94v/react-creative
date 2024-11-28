@@ -15,17 +15,15 @@ const Input = ({
     }
   };
   return (
-    <>
-      <input
-        type='text'
-        value={value}
-        placeholder={placeholder}
-        onChange={e => onChange?.(e.target.value)}
-        onKeyDown={handleKeyDown}
-        onFocus={onFocus}
-        onBlur={onBlur}
-      />
-    </>
+    <input
+      type='text'
+      value={value}
+      placeholder={placeholder}
+      onChange={e => onChange?.(e.target.value)}
+      onKeyDown={handleKeyDown}
+      onFocus={onFocus}
+      onBlur={onBlur}
+    />
   );
 };
 
